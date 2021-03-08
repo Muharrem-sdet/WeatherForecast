@@ -13,7 +13,7 @@ data class ForecastContainer(
     @PrimaryKey(autoGenerate = false)
     val id: Int = 0,
     @Expose(serialize = false, deserialize = false)
-    val forecastEpoch: Long = 0L,
+    val forecastEpoch: Long = System.currentTimeMillis(),
     val data: List<Forecast>,
     val city_name: String,
     val lon: Double,

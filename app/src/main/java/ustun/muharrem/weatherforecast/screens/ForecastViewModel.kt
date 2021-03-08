@@ -17,13 +17,16 @@ import ustun.muharrem.weatherforecast.utilities.*
 
 class ForecastViewModel(private val forecastContainerRepository: ForecastContainerRepository) :
     ViewModel() {
-
     private val _forecastListLiveData = forecastContainerRepository.forecastListLiveData
     val forecastListLiveData: LiveData<ForecastContainer>
         get() = _forecastListLiveData
 
     fun getForecastContainer(activity: Activity) {
         forecastContainerRepository.getForecastContainer(activity)
+    }
+
+    fun fetchForecastContainer(activity: Activity){
+        forecastContainerRepository.fetchForecastContainer(activity)
     }
 }
 

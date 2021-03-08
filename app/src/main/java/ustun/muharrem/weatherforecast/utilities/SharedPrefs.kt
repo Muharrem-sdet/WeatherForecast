@@ -2,50 +2,48 @@ package ustun.muharrem.weatherforecast.utilities
 
 import android.app.Activity
 import android.content.Context
+import android.content.SharedPreferences
 
 object SharedPrefs {
+
+    private fun getSharedPref(activity: Activity): SharedPreferences {
+        return activity.getPreferences(Context.MODE_PRIVATE)
+    }
+
     fun getIsCelsiusFromSettings(activity: Activity): Boolean {
-        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-        return sharedPref.getBoolean(IS_METRIC_SETTING_KEY, true)
+        return getSharedPref(activity).getBoolean(IS_CELSIUS_SETTING_KEY, IS_CELSIUS_DEFAULT_VALUE)
     }
 
     fun setIsCelsiusInSettings(activity: Activity, value: Boolean) {
-        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
-        editor.putBoolean(IS_METRIC_SETTING_KEY, value)
+        val editor = getSharedPref(activity).edit()
+        editor.putBoolean(IS_CELSIUS_SETTING_KEY, value)
         editor.apply()
     }
 
     fun setNumberOfDays(activity: Activity, days: String) {
-        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
+        val editor = getSharedPref(activity).edit()
         editor.putString(NUMBER_OF_DAYS_SETTING_KEY, days)
         editor.apply()
     }
 
     fun getNumberOfDays(activity: Activity): String? {
-        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-        return sharedPref.getString(NUMBER_OF_DAYS_SETTING_KEY, "16")
+        return getSharedPref(activity).getString(NUMBER_OF_DAYS_SETTING_KEY, "16")
     }
 
     fun getNotificationsSettings(activity: Activity): Boolean {
-        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-        return sharedPref.getBoolean(IS_NOTIFICATIONS_ENABLED, true)
+        return getSharedPref(activity).getBoolean(IS_NOTIFICATIONS_ENABLED, true)
     }
 
     fun setNotificationsSettings(activity: Activity, isEnabled: Boolean) {
-        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-        sharedPref.edit().putBoolean(IS_NOTIFICATIONS_ENABLED, isEnabled).apply()
+        getSharedPref(activity).edit().putBoolean(IS_NOTIFICATIONS_ENABLED, isEnabled).apply()
     }
 
     fun getLangCode(activity: Activity): String? {
-        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-        return sharedPref.getString(LANG_CODE_SETTINGS_KEY, null)
+        return getSharedPref(activity).getString(LANG_CODE_SETTINGS_KEY, null)
     }
 
     fun setLangCode(activity: Activity, langCode: String) {
-        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
+        val editor = getSharedPref(activity).edit()
         editor.putString(LANG_CODE_SETTINGS_KEY, langCode)
         editor.apply()
     }

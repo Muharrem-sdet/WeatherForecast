@@ -12,17 +12,17 @@ import ustun.muharrem.weatherforecast.R
 import ustun.muharrem.weatherforecast.screens.ForecastViewModel
 import ustun.muharrem.weatherforecast.screens.ForecastViewModelFactory
 import ustun.muharrem.weatherforecast.screens.adapters.ForecastListAdapter
+import ustun.muharrem.weatherforecast.utilities.SharedPrefs
 
 class ForecastFragment : Fragment() {
 
-    lateinit var forecastViewModel: ForecastViewModel
+    private lateinit var forecastViewModel: ForecastViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val factory = ForecastViewModelFactory(requireActivity().application)
         forecastViewModel =
             ViewModelProvider(requireActivity(), factory).get(ForecastViewModel::class.java)
-        forecastViewModel.getForecastContainer(requireActivity())
     }
 
     override fun onCreateView(
@@ -31,6 +31,7 @@ class ForecastFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
+        forecastViewModel.getForecastContainer(requireActivity())
         return inflater.inflate(R.layout.fragment_forecast, container, false)
     }
 

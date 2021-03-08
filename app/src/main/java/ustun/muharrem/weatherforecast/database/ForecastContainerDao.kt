@@ -15,6 +15,12 @@ interface ForecastContainerDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(forecastContainer: ForecastContainer)
 
-    @Query("DELETE FROM forecastContainers")
-    fun deleteAll()
+//    @Query("DELETE FROM forecastContainers")
+//    fun deleteAll()
+
+//    @Query("SELECT  forecastEpoch from forecastContainers")
+//    fun getForecastEpoch() : Long
+
+//    @Query("INSERT INTO forecastContainers (forecastEpoch) VALUES (:currentEpoch)")
+//    fun setCurrentForecastEpoch(currentEpoch: Long)
 }

@@ -8,19 +8,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.layout_settings_days.*
 import kotlinx.android.synthetic.main.layout_settings_item.view.*
 import kotlinx.android.synthetic.main.layout_settings_notification.*
 import kotlinx.android.synthetic.main.layout_settings_units.*
 import ustun.muharrem.weatherforecast.R
+import ustun.muharrem.weatherforecast.screens.ForecastViewModel
+import ustun.muharrem.weatherforecast.screens.ForecastViewModelFactory
 import ustun.muharrem.weatherforecast.utilities.SharedPrefs
 
 class SettingsFragment : Fragment() {
+
+    private lateinit var forecastViewModel: ForecastViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val factory = ForecastViewModelFactory(requireActivity().application)
+        forecastViewModel =
+            ViewModelProvider(requireActivity(), factory).get(ForecastViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        forecastViewModel.getForecastContainer(requireActivity())
         return inflater.inflate(R.layout.fragment_settings, container, false)
     }
 
@@ -45,11 +58,13 @@ class SettingsFragment : Fragment() {
                 SharedPrefs.setIsCelsiusInSettings(mActivity, true)
                 setDegreeViews()
                 setUnitSubtitle()
+                forecastViewModel.fetchForecastContainer(mActivity)
             }
             fahrenheit_degree_text_view.setOnClickListener {
                 SharedPrefs.setIsCelsiusInSettings(mActivity, false)
                 setDegreeViews()
                 setUnitSubtitle()
+                forecastViewModel.fetchForecastContainer(mActivity)
             }
 
             days_settings_spinner.onItemSelectedListener = object :
