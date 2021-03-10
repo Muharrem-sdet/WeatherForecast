@@ -10,10 +10,10 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "forecastContainers")
 data class ForecastContainer(
     @Expose(deserialize = false, serialize = false)
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey
     val id: Int = 0,
     @Expose(serialize = false, deserialize = false)
-    val forecastEpoch: Long = System.currentTimeMillis(),
+    val forecastEpoch: Long = 0,
     val data: List<Forecast>,
     val city_name: String,
     val lon: Double,

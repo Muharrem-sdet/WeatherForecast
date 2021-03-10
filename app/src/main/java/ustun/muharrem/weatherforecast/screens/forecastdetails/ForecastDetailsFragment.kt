@@ -41,10 +41,12 @@ class ForecastDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setDetailsItemLabels()
+
         forecastViewModel.forecastListLiveData.observe(viewLifecycleOwner, Observer {
+            val position = Math.min(args.position, it.data.size-1)
             city_name.text = it.city_name
-            setDetailsHeaderValues(it.data[args.position])
-            setDetailsItemValues(it.data[args.position])
+            setDetailsHeaderValues(it.data[position])
+            setDetailsItemValues(it.data[position])
         })
     }
 

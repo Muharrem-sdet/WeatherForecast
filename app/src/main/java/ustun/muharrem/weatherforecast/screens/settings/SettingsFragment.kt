@@ -33,7 +33,7 @@ class SettingsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        forecastViewModel.getForecastContainer(requireActivity())
+//        forecastViewModel.getForecastContainer(requireActivity())
         return inflater.inflate(R.layout.fragment_settings, container, false)
     }
 
@@ -58,13 +58,13 @@ class SettingsFragment : Fragment() {
                 SharedPrefs.setIsCelsiusInSettings(mActivity, true)
                 setDegreeViews()
                 setUnitSubtitle()
-                forecastViewModel.fetchForecastContainer(mActivity)
+                forecastViewModel.getForecastContainer(mActivity)
             }
             fahrenheit_degree_text_view.setOnClickListener {
                 SharedPrefs.setIsCelsiusInSettings(mActivity, false)
                 setDegreeViews()
                 setUnitSubtitle()
-                forecastViewModel.fetchForecastContainer(mActivity)
+                forecastViewModel.getForecastContainer(mActivity)
             }
 
             days_settings_spinner.onItemSelectedListener = object :

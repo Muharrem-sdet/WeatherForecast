@@ -1,11 +1,7 @@
 package ustun.muharrem.weatherforecast.screens
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentActivity
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -14,7 +10,7 @@ import ustun.muharrem.weatherforecast.R
 import ustun.muharrem.weatherforecast.utilities.SharedPrefs
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +28,8 @@ class MainActivity : AppCompatActivity() {
         toolbar.setupWithNavController(navController, appBarConfiguration)
     }
 
-    private fun initializeAppLangCode(){
-        if(SharedPrefs.getLangCode(this) == null) {
+    private fun initializeAppLangCode() {
+        if (SharedPrefs.getLangCode(this) == null) {
             var langCode = Locale.getDefault().language
             langCode = when (langCode) {
                 "tr" -> "tr"

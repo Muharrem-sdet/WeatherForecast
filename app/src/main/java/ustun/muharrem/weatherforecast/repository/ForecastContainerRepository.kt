@@ -1,7 +1,10 @@
 package ustun.muharrem.weatherforecast.repository
 
 import android.app.Activity
+import android.util.Log
 import androidx.lifecycle.LiveData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -13,21 +16,36 @@ import ustun.muharrem.weatherforecast.utilities.*
 class ForecastContainerRepository(private val dao: ForecastContainerDao) {
 
     val forecastListLiveData: LiveData<ForecastContainer> = dao.getForecastContainer()
-//    val forecastEpochNow = System.currentTimeMillis()
-//    val forecastEpochBefore = dao.getForecastEpoch()
 
     fun getForecastContainer(activity: Activity) {
+//        withContext(Dispatchers.IO) {
+//            val forecastEpochNow = System.currentTimeMillis()
+//            val forecastEpochBefore = dao.getForecastEpoch()
+//            val timePassed = forecastEpochNow - forecastEpochBefore > THREE_HOUR_EPOCH_TIME
+//            if(timePassed)
         fetchForecastContainer(activity)
+//        }
+//        }
     }
 
     private fun insertToDatabase(forecastContainer: ForecastContainer) {
+        Log.d("MyApp", "I am in the fun of insert it to database")
+
         Thread {
-            // No need to delete because it replaces in case of a conflict
+            //            dao.deleteAll()
+            Log.d("MyApp", "I am about to insert it to database")
+
             dao.insert(forecastContainer)
+/*           val currentEpoch = System.currentTimeMillis()
+//            dao.updateCurrentForecastEpoch(currentEpoch)
+*/
         }.start()
+        Log.d("MyApp", "I am at the end of the fun of insert it to database")
+
+
     }
 
-    fun fetchForecastContainer(activity: Activity) {
+    private fun fetchForecastContainer(activity: Activity) {
         activity.let {
             val isCelsius = SharedPrefs.getIsCelsiusFromSettings(it)
             val days = SharedPrefs.getNumberOfDays(it)
@@ -36,6 +54,7 @@ class ForecastContainerRepository(private val dao: ForecastContainerDao) {
             val getDataService = RetrofitClient.retrofit?.create(GetDataService::class.java)
             val callForecast =
                 getDataService?.getForecast(langCode!!, days!!, units, 43026, API_KEY)
+
             callForecast?.enqueue(object : Callback<ForecastContainer> {
                 override fun onResponse(
                     call: Call<ForecastContainer>,
@@ -43,15 +62,15 @@ class ForecastContainerRepository(private val dao: ForecastContainerDao) {
                 ) {
                     val forecastContainer: ForecastContainer? = response.body()
                     forecastContainer?.let {
+                        Log.d("MyApp", "ForecastContainer is NOT null")
                         insertToDatabase(it)
-//                        val currentEpoch = System.currentTimeMillis()
-//                        dao.setCurrentForecastEpoch(currentEpoch)
                     }
                 }
 
                 override fun onFailure(call: Call<ForecastContainer>, t: Throwable) {
                     // TODO add some error messages for the user
-                    t.stackTrace
+                    t.localizedMessage?.let { Log.d("MyApp", it) }
+                    Log.d("MyApp", "I am onFailureCall")
                 }
             })
         }

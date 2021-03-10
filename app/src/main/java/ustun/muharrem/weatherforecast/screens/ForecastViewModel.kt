@@ -2,10 +2,10 @@ package ustun.muharrem.weatherforecast.screens
 
 import android.app.Activity
 import android.app.Application
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import android.content.SharedPreferences
+import androidx.lifecycle.*
+import androidx.preference.PreferenceManager
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,11 +22,7 @@ class ForecastViewModel(private val forecastContainerRepository: ForecastContain
         get() = _forecastListLiveData
 
     fun getForecastContainer(activity: Activity) {
-        forecastContainerRepository.getForecastContainer(activity)
-    }
-
-    fun fetchForecastContainer(activity: Activity){
-        forecastContainerRepository.fetchForecastContainer(activity)
+            forecastContainerRepository.getForecastContainer(activity)
     }
 }
 
