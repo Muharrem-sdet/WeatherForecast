@@ -1,19 +1,13 @@
 package ustun.muharrem.weatherforecast.screens
 
-import android.app.Activity
 import android.app.Application
-import android.content.SharedPreferences
 import androidx.lifecycle.*
-import androidx.preference.PreferenceManager
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import ustun.muharrem.weatherforecast.data.ForecastContainer
 import ustun.muharrem.weatherforecast.database.ForecastDatabase
-import ustun.muharrem.weatherforecast.network.GetDataService
 import ustun.muharrem.weatherforecast.repository.ForecastContainerRepository
 import ustun.muharrem.weatherforecast.utilities.*
+import java.util.*
 
 class ForecastViewModel(private val forecastContainerRepository: ForecastContainerRepository) :
     ViewModel() {
@@ -23,6 +17,17 @@ class ForecastViewModel(private val forecastContainerRepository: ForecastContain
 
     fun getForecastContainer() {
             forecastContainerRepository.getForecastContainer()
+    }
+
+        fun initializeAppLangCode() {
+        if (SharedPrefs.getLangCode() == null) {
+            var langCode = Locale.getDefault().language
+            langCode = when (langCode) {
+                "tr" -> "tr"
+                else -> "en"
+            }
+            SharedPrefs.setLangCode(langCode)
+        }
     }
 }
 

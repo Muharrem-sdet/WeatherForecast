@@ -23,6 +23,8 @@ class ForecastFragment : Fragment() {
         val factory = ForecastViewModelFactory(requireActivity().application)
         forecastViewModel =
             ViewModelProvider(requireActivity(), factory).get(ForecastViewModel::class.java)
+        forecastViewModel.initializeAppLangCode()
+
     }
 
     override fun onCreateView(

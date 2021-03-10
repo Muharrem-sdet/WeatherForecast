@@ -17,7 +17,6 @@ class MainActivity : AppCompatActivity(){
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         initializeToolbar()
-        initializeAppLangCode()
     }
 
     private fun initializeToolbar() {
@@ -26,16 +25,5 @@ class MainActivity : AppCompatActivity(){
         val navController = host.navController
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         toolbar.setupWithNavController(navController, appBarConfiguration)
-    }
-
-    private fun initializeAppLangCode() {
-        if (SharedPrefs.getLangCode() == null) {
-            var langCode = Locale.getDefault().language
-            langCode = when (langCode) {
-                "tr" -> "tr"
-                else -> "en"
-            }
-            SharedPrefs.setLangCode(langCode)
-        }
     }
 }
