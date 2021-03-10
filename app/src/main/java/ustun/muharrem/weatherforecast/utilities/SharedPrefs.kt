@@ -7,48 +7,25 @@ import android.content.SharedPreferences
 object SharedPrefs {
 
     var application = Application()
+    private val sharedPref: SharedPreferences
+        get() = application.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
-    private fun getSharedPref(): SharedPreferences {
-        return application.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-    }
+    var isCelsius: Boolean
+        get() = sharedPref.getBoolean(IS_CELSIUS_SETTING_KEY, IS_CELSIUS_DEFAULT_VALUE)
+        set(value) = sharedPref.edit().putBoolean(IS_CELSIUS_SETTING_KEY, value).apply()
 
-    fun getIsCelsiusFromSettings(): Boolean {
-        return getSharedPref().getBoolean(IS_CELSIUS_SETTING_KEY, IS_CELSIUS_DEFAULT_VALUE)
-    }
+    var numberOfDays: String?
+        get() = sharedPref.getString(NUMBER_OF_DAYS_SETTING_KEY, "16")
+        set(value) = sharedPref.edit().putString(NUMBER_OF_DAYS_SETTING_KEY, value).apply()
 
-    fun setIsCelsiusInSettings(value: Boolean) {
-        val editor = getSharedPref().edit()
-        editor.putBoolean(IS_CELSIUS_SETTING_KEY, value)
-        editor.apply()
-    }
+    var notificationEnabled: Boolean
+        get() = sharedPref.getBoolean(IS_NOTIFICATIONS_ENABLED, true)
+        set(value) = sharedPref.edit().putBoolean(IS_NOTIFICATIONS_ENABLED, value).apply()
 
-    fun setNumberOfDays(days: String) {
-        val editor = getSharedPref().edit()
-        editor.putString(NUMBER_OF_DAYS_SETTING_KEY, days)
-        editor.apply()
-    }
+    var langCode: String?
+        get() = sharedPref.getString(LANG_CODE_SETTINGS_KEY, null)
+        set(value) = sharedPref.edit().putString(LANG_CODE_SETTINGS_KEY, value).apply()
 
-    fun getNumberOfDays(): String? {
-        return getSharedPref().getString(NUMBER_OF_DAYS_SETTING_KEY, "16")
-    }
-
-    fun getNotificationsSettings(): Boolean {
-        return getSharedPref().getBoolean(IS_NOTIFICATIONS_ENABLED, true)
-    }
-
-    fun setNotificationsSettings(isEnabled: Boolean) {
-        getSharedPref().edit().putBoolean(IS_NOTIFICATIONS_ENABLED, isEnabled).apply()
-    }
-
-    fun getLangCode(): String? {
-        return getSharedPref().getString(LANG_CODE_SETTINGS_KEY, null)
-    }
-
-    fun setLangCode(langCode: String) {
-        val editor = getSharedPref().edit()
-        editor.putString(LANG_CODE_SETTINGS_KEY, langCode)
-        editor.apply()
-    }
 
 //    fun getEpochTimeOfLastFetch(activity: Activity): Long {
 //        return getSharedPref(activity).getLong(EPOCH_TIME_KEY, 0)

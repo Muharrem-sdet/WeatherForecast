@@ -45,32 +45,31 @@ class ForecastContainerRepository(private val dao: ForecastContainerDao) {
     }
 
     private fun fetchForecastContainer() {
-            val isCelsius = SharedPrefs.getIsCelsiusFromSettings()
-            val days = SharedPrefs.getNumberOfDays()
-            val langCode = SharedPrefs.getLangCode()
-            val units = if (isCelsius) METRIC_QUERY_PARAM_VALUE else IMPERIAL_QUERY_PARAM_VALUE
-            val getDataService = RetrofitClient.retrofit?.create(GetDataService::class.java)
-            val callForecast =
-                getDataService?.getForecast(langCode!!, days!!, units, 43026, API_KEY)
+        val langCode = SharedPrefs.langCode
+        val units =
+            if (SharedPrefs.isCelsius) METRIC_QUERY_PARAM_VALUE else IMPERIAL_QUERY_PARAM_VALUE
+        val getDataService = RetrofitClient.retrofit?.create(GetDataService::class.java)
+        val callForecast =
+            getDataService?.getForecast(langCode!!, units, 43026, API_KEY)
 
-            callForecast?.enqueue(object : Callback<ForecastContainer> {
-                override fun onResponse(
-                    call: Call<ForecastContainer>,
-                    response: Response<ForecastContainer>
-                ) {
-                    val forecastContainer: ForecastContainer? = response.body()
-                    forecastContainer?.let {
-                        Log.d("MyApp", "ForecastContainer is NOT null")
-                        insertToDatabase(it)
-                    }
+        callForecast?.enqueue(object : Callback<ForecastContainer> {
+            override fun onResponse(
+                call: Call<ForecastContainer>,
+                response: Response<ForecastContainer>
+            ) {
+                val forecastContainer: ForecastContainer? = response.body()
+                forecastContainer?.let {
+                    Log.d("MyApp", "ForecastContainer is NOT null")
+                    insertToDatabase(it)
                 }
+            }
 
-                override fun onFailure(call: Call<ForecastContainer>, t: Throwable) {
-                    // TODO add some error messages for the user
-                    t.localizedMessage?.let { Log.d("MyApp", it) }
-                    Log.d("MyApp", "I am onFailureCall")
-                }
-            })
+            override fun onFailure(call: Call<ForecastContainer>, t: Throwable) {
+                // TODO add some error messages for the user
+                t.localizedMessage?.let { Log.d("MyApp", it) }
+                Log.d("MyApp", "I am onFailureCall")
+            }
+        })
 
     }
 }

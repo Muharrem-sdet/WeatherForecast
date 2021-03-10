@@ -16,17 +16,15 @@ class ForecastViewModel(private val forecastContainerRepository: ForecastContain
         get() = _forecastListLiveData
 
     fun getForecastContainer() {
-            forecastContainerRepository.getForecastContainer()
+        forecastContainerRepository.getForecastContainer()
     }
 
-        fun initializeAppLangCode() {
-        if (SharedPrefs.getLangCode() == null) {
-            var langCode = Locale.getDefault().language
-            langCode = when (langCode) {
+    fun initializeAppLangCode() {
+        if (SharedPrefs.langCode == null) {
+            SharedPrefs.langCode = when (Locale.getDefault().language) {
                 "tr" -> "tr"
                 else -> "en"
             }
-            SharedPrefs.setLangCode(langCode)
         }
     }
 }

@@ -10,6 +10,7 @@ import ustun.muharrem.weatherforecast.R
 import ustun.muharrem.weatherforecast.data.ForecastContainer
 import ustun.muharrem.weatherforecast.utilities.DateUtil
 import ustun.muharrem.weatherforecast.utilities.DrawableManager.getImageId
+import ustun.muharrem.weatherforecast.utilities.SharedPrefs
 import kotlin.math.roundToInt
 
 class ForecastListAdapter(
@@ -88,7 +89,7 @@ class ForecastListAdapter(
     }
 
     override fun getItemCount(): Int {
-        return forecastContainer.data.size
+        return SharedPrefs.numberOfDays!!.toInt()
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

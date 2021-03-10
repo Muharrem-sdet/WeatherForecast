@@ -43,10 +43,9 @@ class ForecastDetailsFragment : Fragment() {
         setDetailsItemLabels()
 
         forecastViewModel.forecastListLiveData.observe(viewLifecycleOwner, Observer {
-            val position = Math.min(args.position, it.data.size-1)
             city_name.text = it.city_name
-            setDetailsHeaderValues(it.data[position])
-            setDetailsItemValues(it.data[position])
+            setDetailsHeaderValues(it.data[args.position])
+            setDetailsItemValues(it.data[args.position])
         })
     }
 
@@ -63,7 +62,7 @@ class ForecastDetailsFragment : Fragment() {
                 DateUtil.getTimeText(forecast.sunrise_ts)
             sunset_time_details_item.forecast_details_value.text =
                 DateUtil.getTimeText(forecast.sunset_ts)
-            val windSpeedUnit = if (SharedPrefs.getIsCelsiusFromSettings()) " m/s" else " mph"
+            val windSpeedUnit = if (SharedPrefs.isCelsius) " m/s" else " mph"
             wind_speed_details_item.forecast_details_value.text =
                 forecast.wind_spd.toString().plus(windSpeedUnit)
             wind_direction_details_item.forecast_details_value.text =
@@ -71,12 +70,12 @@ class ForecastDetailsFragment : Fragment() {
             humidity_details_item.forecast_details_value.text = forecast.rh.toString().plus("%")
             precipitation_probability_details_item.forecast_details_value.text =
                 forecast.pop.toString().plus("%")
-            val precipUnit = if (SharedPrefs.getIsCelsiusFromSettings()) " mm" else " in"
+            val precipUnit = if (SharedPrefs.isCelsius) " mm" else " in"
             liquid_precipitation_details_item.forecast_details_value.text =
                 forecast.precip.toString().plus(precipUnit)
             pressure_details_item.forecast_details_value.text =
                 forecast.pres.toString().plus(" mbar")
-            val visLength = if (SharedPrefs.getIsCelsiusFromSettings()) " km" else " mi"
+            val visLength = if (SharedPrefs.isCelsius) " km" else " mi"
             visibility_details_item.forecast_details_value.text =
                 forecast.vis.toString().plus(visLength)
             max_uv_index_details_item.forecast_details_value.text = forecast.uv.toString()

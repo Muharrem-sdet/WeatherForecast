@@ -53,62 +53,61 @@ class SettingsFragment : Fragment() {
 
     private fun setClickListeners() {
 
-            celsius_degree_text_view.setOnClickListener {
-                SharedPrefs.setIsCelsiusInSettings(true)
-                setDegreeViews()
-                setUnitSubtitle()
-                forecastViewModel.getForecastContainer()
-            }
-            fahrenheit_degree_text_view.setOnClickListener {
-                SharedPrefs.setIsCelsiusInSettings(false)
-                setDegreeViews()
-                setUnitSubtitle()
-                forecastViewModel.getForecastContainer()
+        celsius_degree_text_view.setOnClickListener {
+            SharedPrefs.isCelsius = true
+            setDegreeViews()
+            setUnitSubtitle()
+            forecastViewModel.getForecastContainer()
+        }
+        fahrenheit_degree_text_view.setOnClickListener {
+            SharedPrefs.isCelsius = false
+            setDegreeViews()
+            setUnitSubtitle()
+            forecastViewModel.getForecastContainer()
+        }
+
+        days_settings_spinner.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long
+            ) {
+                val numberOfDays: String = parent?.getItemAtPosition(position).toString()
+                SharedPrefs.numberOfDays = numberOfDays
+                setNumberOfDaysSubtitle()
             }
 
-            days_settings_spinner.onItemSelectedListener = object :
-                AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?, view: View?, position: Int, id: Long
-                ) {
-                    val numberOfDays: String = parent?.getItemAtPosition(position).toString()
-                    SharedPrefs.setNumberOfDays(numberOfDays)
-                    setNumberOfDaysSubtitle()
-                }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
 
-                override fun onNothingSelected(parent: AdapterView<*>?) {}
-            }
-
-            notification_settings_checkbox.setOnCheckedChangeListener { buttonView, isChecked ->
-                SharedPrefs.setNotificationsSettings(isChecked)
-                setNotificationsSubtitle()
-                val toastMessage =
-                    if (isChecked) getString(R.string.weather_notifications_enabled) else getString(
-                        R.string.weather_notifications_disabled
-                    )
-                Toast.makeText(requireActivity(), toastMessage, Toast.LENGTH_SHORT).show()
-                //  TODO other checkbox listeners actions to send notifications!!!
-            }
+        notification_settings_checkbox.setOnCheckedChangeListener { buttonView, isChecked ->
+            SharedPrefs.notificationEnabled = isChecked
+            setNotificationsSubtitle()
+            val toastMessage =
+                if (isChecked) getString(R.string.weather_notifications_enabled) else getString(
+                    R.string.weather_notifications_disabled
+                )
+            Toast.makeText(requireActivity(), toastMessage, Toast.LENGTH_SHORT).show()
+            //  TODO other checkbox listeners actions to send notifications!!!
+        }
 
     }
 
     private fun setNotificationsCheckbox() {
-            notification_settings_checkbox.isChecked = SharedPrefs.getNotificationsSettings()
+        notification_settings_checkbox.isChecked = SharedPrefs.notificationEnabled
     }
 
     private fun setDegreeViews() {
-            val isCelsius = SharedPrefs.getIsCelsiusFromSettings()
-            if (isCelsius) {
-                celsius_degree_text_view.setTextColor(Color.BLACK)
-                fahrenheit_degree_text_view.setTextColor(Color.GRAY)
-                celsius_degree_text_view.setTypeface(Typeface.DEFAULT_BOLD)
-                fahrenheit_degree_text_view.setTypeface(Typeface.DEFAULT)
-            } else {
-                celsius_degree_text_view.setTextColor(Color.GRAY)
-                fahrenheit_degree_text_view.setTextColor(Color.BLACK)
-                celsius_degree_text_view.setTypeface(Typeface.DEFAULT)
-                fahrenheit_degree_text_view.setTypeface(Typeface.DEFAULT_BOLD)
-            }
+        if (SharedPrefs.isCelsius) {
+            celsius_degree_text_view.setTextColor(Color.BLACK)
+            fahrenheit_degree_text_view.setTextColor(Color.GRAY)
+            celsius_degree_text_view.setTypeface(Typeface.DEFAULT_BOLD)
+            fahrenheit_degree_text_view.setTypeface(Typeface.DEFAULT)
+        } else {
+            celsius_degree_text_view.setTextColor(Color.GRAY)
+            fahrenheit_degree_text_view.setTextColor(Color.BLACK)
+            celsius_degree_text_view.setTypeface(Typeface.DEFAULT)
+            fahrenheit_degree_text_view.setTypeface(Typeface.DEFAULT_BOLD)
+        }
     }
 
     private fun setSettingsSubtitles() {
@@ -118,27 +117,24 @@ class SettingsFragment : Fragment() {
     }
 
     private fun setUnitSubtitle() {
-            val isCelsius = SharedPrefs.getIsCelsiusFromSettings()
-            units_settings_item.settings_value.text = if (isCelsius) {
-                getString(R.string.celsius)
-            } else {
-                getString(R.string.fahrenheit)
-            }
+        units_settings_item.settings_value.text = if (SharedPrefs.isCelsius) {
+            getString(R.string.celsius)
+        } else {
+            getString(R.string.fahrenheit)
+        }
     }
 
     private fun setNotificationsSubtitle() {
-            val isEnabled = SharedPrefs.getNotificationsSettings()
-            notification_settings_item.settings_value.text = if (isEnabled) {
-                getString(R.string.enabled)
-            } else {
-                getString(R.string.disabled)
-            }
+        notification_settings_item.settings_value.text = if (SharedPrefs.notificationEnabled) {
+            getString(R.string.enabled)
+        } else {
+            getString(R.string.disabled)
+        }
     }
 
     private fun setNumberOfDaysSubtitle() {
-            days_settings_item.settings_value.text = SharedPrefs.getNumberOfDays().plus(
-                getString(R.string.day_forecast)
-            )
+        days_settings_item.settings_value.text =
+            SharedPrefs.numberOfDays.plus(getString(R.string.day_forecast))
     }
 
     private fun setSettingsTitles() {
@@ -149,14 +145,13 @@ class SettingsFragment : Fragment() {
     }
 
     private fun setNumberOfDaysSpinner() {
-            val adapter = ArrayAdapter.createFromResource(
-                requireActivity(), R.array.number_of_days, android.R.layout.simple_spinner_item
-            )
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            days_settings_spinner.adapter = adapter
-            // Selects the default number of days value for the first time
-            val numberOfDays = SharedPrefs.getNumberOfDays()
-            val position: Int = adapter.getPosition(numberOfDays)
-            days_settings_spinner.setSelection(position)
+        val adapter = ArrayAdapter.createFromResource(
+            requireActivity(), R.array.number_of_days, android.R.layout.simple_spinner_item
+        )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        days_settings_spinner.adapter = adapter
+        // Selects the default number of days value for the first time
+        val position: Int = adapter.getPosition(SharedPrefs.numberOfDays)
+        days_settings_spinner.setSelection(position)
     }
 }
