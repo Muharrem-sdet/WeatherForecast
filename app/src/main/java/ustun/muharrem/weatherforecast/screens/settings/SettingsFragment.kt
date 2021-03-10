@@ -33,7 +33,6 @@ class SettingsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-//        forecastViewModel.getForecastContainer(requireActivity())
         return inflater.inflate(R.layout.fragment_settings, container, false)
     }
 
@@ -53,18 +52,18 @@ class SettingsFragment : Fragment() {
     }
 
     private fun setClickListeners() {
-        activity?.let { mActivity ->
+
             celsius_degree_text_view.setOnClickListener {
-                SharedPrefs.setIsCelsiusInSettings(mActivity, true)
+                SharedPrefs.setIsCelsiusInSettings(true)
                 setDegreeViews()
                 setUnitSubtitle()
-                forecastViewModel.getForecastContainer(mActivity)
+                forecastViewModel.getForecastContainer()
             }
             fahrenheit_degree_text_view.setOnClickListener {
-                SharedPrefs.setIsCelsiusInSettings(mActivity, false)
+                SharedPrefs.setIsCelsiusInSettings(false)
                 setDegreeViews()
                 setUnitSubtitle()
-                forecastViewModel.getForecastContainer(mActivity)
+                forecastViewModel.getForecastContainer()
             }
 
             days_settings_spinner.onItemSelectedListener = object :
@@ -73,7 +72,7 @@ class SettingsFragment : Fragment() {
                     parent: AdapterView<*>?, view: View?, position: Int, id: Long
                 ) {
                     val numberOfDays: String = parent?.getItemAtPosition(position).toString()
-                    SharedPrefs.setNumberOfDays(mActivity, numberOfDays)
+                    SharedPrefs.setNumberOfDays(numberOfDays)
                     setNumberOfDaysSubtitle()
                 }
 
@@ -81,27 +80,24 @@ class SettingsFragment : Fragment() {
             }
 
             notification_settings_checkbox.setOnCheckedChangeListener { buttonView, isChecked ->
-                SharedPrefs.setNotificationsSettings(mActivity, isChecked)
+                SharedPrefs.setNotificationsSettings(isChecked)
                 setNotificationsSubtitle()
                 val toastMessage =
                     if (isChecked) getString(R.string.weather_notifications_enabled) else getString(
                         R.string.weather_notifications_disabled
                     )
-                Toast.makeText(mActivity, toastMessage, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireActivity(), toastMessage, Toast.LENGTH_SHORT).show()
                 //  TODO other checkbox listeners actions to send notifications!!!
             }
-        }
+
     }
 
     private fun setNotificationsCheckbox() {
-        activity?.let {
-            notification_settings_checkbox.isChecked = SharedPrefs.getNotificationsSettings(it)
-        }
+            notification_settings_checkbox.isChecked = SharedPrefs.getNotificationsSettings()
     }
 
     private fun setDegreeViews() {
-        activity?.let {
-            val isCelsius = SharedPrefs.getIsCelsiusFromSettings(it)
+            val isCelsius = SharedPrefs.getIsCelsiusFromSettings()
             if (isCelsius) {
                 celsius_degree_text_view.setTextColor(Color.BLACK)
                 fahrenheit_degree_text_view.setTextColor(Color.GRAY)
@@ -113,7 +109,6 @@ class SettingsFragment : Fragment() {
                 celsius_degree_text_view.setTypeface(Typeface.DEFAULT)
                 fahrenheit_degree_text_view.setTypeface(Typeface.DEFAULT_BOLD)
             }
-        }
     }
 
     private fun setSettingsSubtitles() {
@@ -123,33 +118,27 @@ class SettingsFragment : Fragment() {
     }
 
     private fun setUnitSubtitle() {
-        activity?.let {
-            val isCelsius = SharedPrefs.getIsCelsiusFromSettings(it)
+            val isCelsius = SharedPrefs.getIsCelsiusFromSettings()
             units_settings_item.settings_value.text = if (isCelsius) {
                 getString(R.string.celsius)
             } else {
                 getString(R.string.fahrenheit)
             }
-        }
     }
 
     private fun setNotificationsSubtitle() {
-        activity?.let {
-            val isEnabled = SharedPrefs.getNotificationsSettings(it)
+            val isEnabled = SharedPrefs.getNotificationsSettings()
             notification_settings_item.settings_value.text = if (isEnabled) {
                 getString(R.string.enabled)
             } else {
                 getString(R.string.disabled)
             }
-        }
     }
 
     private fun setNumberOfDaysSubtitle() {
-        activity?.let {
-            days_settings_item.settings_value.text = SharedPrefs.getNumberOfDays(it).plus(
+            days_settings_item.settings_value.text = SharedPrefs.getNumberOfDays().plus(
                 getString(R.string.day_forecast)
             )
-        }
     }
 
     private fun setSettingsTitles() {
@@ -160,16 +149,14 @@ class SettingsFragment : Fragment() {
     }
 
     private fun setNumberOfDaysSpinner() {
-        activity?.let {
             val adapter = ArrayAdapter.createFromResource(
-                it, R.array.number_of_days, android.R.layout.simple_spinner_item
+                requireActivity(), R.array.number_of_days, android.R.layout.simple_spinner_item
             )
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             days_settings_spinner.adapter = adapter
             // Selects the default number of days value for the first time
-            val numberOfDays = SharedPrefs.getNumberOfDays(it)
+            val numberOfDays = SharedPrefs.getNumberOfDays()
             val position: Int = adapter.getPosition(numberOfDays)
             days_settings_spinner.setSelection(position)
-        }
     }
 }

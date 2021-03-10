@@ -31,7 +31,7 @@ class ForecastFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
-        forecastViewModel.getForecastContainer(requireActivity())
+        forecastViewModel.getForecastContainer()
         return inflater.inflate(R.layout.fragment_forecast, container, false)
     }
 

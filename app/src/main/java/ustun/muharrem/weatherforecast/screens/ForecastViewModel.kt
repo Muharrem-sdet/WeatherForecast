@@ -21,8 +21,8 @@ class ForecastViewModel(private val forecastContainerRepository: ForecastContain
     val forecastListLiveData: LiveData<ForecastContainer>
         get() = _forecastListLiveData
 
-    fun getForecastContainer(activity: Activity) {
-            forecastContainerRepository.getForecastContainer(activity)
+    fun getForecastContainer() {
+            forecastContainerRepository.getForecastContainer()
     }
 }
 

@@ -1,61 +1,63 @@
 package ustun.muharrem.weatherforecast.utilities
 
-import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 
 object SharedPrefs {
 
-    private fun getSharedPref(activity: Activity): SharedPreferences {
-        return activity.getPreferences(Context.MODE_PRIVATE)
+    var application = Application()
+
+    private fun getSharedPref(): SharedPreferences {
+        return application.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
     }
 
-    fun getIsCelsiusFromSettings(activity: Activity): Boolean {
-        return getSharedPref(activity).getBoolean(IS_CELSIUS_SETTING_KEY, IS_CELSIUS_DEFAULT_VALUE)
+    fun getIsCelsiusFromSettings(): Boolean {
+        return getSharedPref().getBoolean(IS_CELSIUS_SETTING_KEY, IS_CELSIUS_DEFAULT_VALUE)
     }
 
-    fun setIsCelsiusInSettings(activity: Activity, value: Boolean) {
-        val editor = getSharedPref(activity).edit()
+    fun setIsCelsiusInSettings(value: Boolean) {
+        val editor = getSharedPref().edit()
         editor.putBoolean(IS_CELSIUS_SETTING_KEY, value)
         editor.apply()
     }
 
-    fun setNumberOfDays(activity: Activity, days: String) {
-        val editor = getSharedPref(activity).edit()
+    fun setNumberOfDays(days: String) {
+        val editor = getSharedPref().edit()
         editor.putString(NUMBER_OF_DAYS_SETTING_KEY, days)
         editor.apply()
     }
 
-    fun getNumberOfDays(activity: Activity): String? {
-        return getSharedPref(activity).getString(NUMBER_OF_DAYS_SETTING_KEY, "16")
+    fun getNumberOfDays(): String? {
+        return getSharedPref().getString(NUMBER_OF_DAYS_SETTING_KEY, "16")
     }
 
-    fun getNotificationsSettings(activity: Activity): Boolean {
-        return getSharedPref(activity).getBoolean(IS_NOTIFICATIONS_ENABLED, true)
+    fun getNotificationsSettings(): Boolean {
+        return getSharedPref().getBoolean(IS_NOTIFICATIONS_ENABLED, true)
     }
 
-    fun setNotificationsSettings(activity: Activity, isEnabled: Boolean) {
-        getSharedPref(activity).edit().putBoolean(IS_NOTIFICATIONS_ENABLED, isEnabled).apply()
+    fun setNotificationsSettings(isEnabled: Boolean) {
+        getSharedPref().edit().putBoolean(IS_NOTIFICATIONS_ENABLED, isEnabled).apply()
     }
 
-    fun getLangCode(activity: Activity): String? {
-        return getSharedPref(activity).getString(LANG_CODE_SETTINGS_KEY, null)
+    fun getLangCode(): String? {
+        return getSharedPref().getString(LANG_CODE_SETTINGS_KEY, null)
     }
 
-    fun setLangCode(activity: Activity, langCode: String) {
-        val editor = getSharedPref(activity).edit()
+    fun setLangCode(langCode: String) {
+        val editor = getSharedPref().edit()
         editor.putString(LANG_CODE_SETTINGS_KEY, langCode)
         editor.apply()
     }
 
-    fun getEpochTimeOfLastFetch(activity: Activity): Long{
-        return getSharedPref(activity).getLong(EPOCH_TIME_KEY, 0)
-    }
-
-    fun setEpochTimeOfLastFetch(activity: Activity, epochTime: Long){
-        val editor = getSharedPref(activity).edit()
-        editor.putLong(EPOCH_TIME_KEY, epochTime)
-        editor.apply()
-    }
+//    fun getEpochTimeOfLastFetch(activity: Activity): Long {
+//        return getSharedPref(activity).getLong(EPOCH_TIME_KEY, 0)
+//    }
+//
+//    fun setEpochTimeOfLastFetch(activity: Activity, epochTime: Long) {
+//        val editor = getSharedPref(activity).edit()
+//        editor.putLong(EPOCH_TIME_KEY, epochTime)
+//        editor.apply()
+//    }
 
 }

@@ -34,7 +34,7 @@ class ForecastDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
-        forecastViewModel.getForecastContainer(requireActivity())
+        forecastViewModel.getForecastContainer()
         return inflater.inflate(R.layout.fragment_forecast_details, container, false)
     }
 
@@ -59,12 +59,11 @@ class ForecastDetailsFragment : Fragment() {
     }
 
     private fun setDetailsItemValues(forecast: Forecast) {
-        activity?.let {
             sunrise_time_details_item.forecast_details_value.text =
-                DateUtil.getTimeText(it, forecast.sunrise_ts)
+                DateUtil.getTimeText(forecast.sunrise_ts)
             sunset_time_details_item.forecast_details_value.text =
-                DateUtil.getTimeText(it, forecast.sunset_ts)
-            val windSpeedUnit = if (SharedPrefs.getIsCelsiusFromSettings(it)) " m/s" else " mph"
+                DateUtil.getTimeText(forecast.sunset_ts)
+            val windSpeedUnit = if (SharedPrefs.getIsCelsiusFromSettings()) " m/s" else " mph"
             wind_speed_details_item.forecast_details_value.text =
                 forecast.wind_spd.toString().plus(windSpeedUnit)
             wind_direction_details_item.forecast_details_value.text =
@@ -72,16 +71,15 @@ class ForecastDetailsFragment : Fragment() {
             humidity_details_item.forecast_details_value.text = forecast.rh.toString().plus("%")
             precipitation_probability_details_item.forecast_details_value.text =
                 forecast.pop.toString().plus("%")
-            val precipUnit = if (SharedPrefs.getIsCelsiusFromSettings(it)) " mm" else " in"
+            val precipUnit = if (SharedPrefs.getIsCelsiusFromSettings()) " mm" else " in"
             liquid_precipitation_details_item.forecast_details_value.text =
                 forecast.precip.toString().plus(precipUnit)
             pressure_details_item.forecast_details_value.text =
                 forecast.pres.toString().plus(" mbar")
-            val visLength = if (SharedPrefs.getIsCelsiusFromSettings(it)) " km" else " mi"
+            val visLength = if (SharedPrefs.getIsCelsiusFromSettings()) " km" else " mi"
             visibility_details_item.forecast_details_value.text =
                 forecast.vis.toString().plus(visLength)
             max_uv_index_details_item.forecast_details_value.text = forecast.uv.toString()
-        }
     }
 
     private fun setDetailsItemLabels() {

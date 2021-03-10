@@ -29,13 +29,13 @@ class MainActivity : AppCompatActivity(){
     }
 
     private fun initializeAppLangCode() {
-        if (SharedPrefs.getLangCode(this) == null) {
+        if (SharedPrefs.getLangCode() == null) {
             var langCode = Locale.getDefault().language
             langCode = when (langCode) {
                 "tr" -> "tr"
                 else -> "en"
             }
-            SharedPrefs.setLangCode(this, langCode)
+            SharedPrefs.setLangCode(langCode)
         }
     }
 }

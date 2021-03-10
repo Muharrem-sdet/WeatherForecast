@@ -17,13 +17,13 @@ class ForecastContainerRepository(private val dao: ForecastContainerDao) {
 
     val forecastListLiveData: LiveData<ForecastContainer> = dao.getForecastContainer()
 
-    fun getForecastContainer(activity: Activity) {
+    fun getForecastContainer() {
 //        withContext(Dispatchers.IO) {
 //            val forecastEpochNow = System.currentTimeMillis()
 //            val forecastEpochBefore = dao.getForecastEpoch()
 //            val timePassed = forecastEpochNow - forecastEpochBefore > THREE_HOUR_EPOCH_TIME
 //            if(timePassed)
-        fetchForecastContainer(activity)
+        fetchForecastContainer()
 //        }
 //        }
     }
@@ -32,7 +32,6 @@ class ForecastContainerRepository(private val dao: ForecastContainerDao) {
         Log.d("MyApp", "I am in the fun of insert it to database")
 
         Thread {
-            //            dao.deleteAll()
             Log.d("MyApp", "I am about to insert it to database")
 
             dao.insert(forecastContainer)
@@ -45,11 +44,10 @@ class ForecastContainerRepository(private val dao: ForecastContainerDao) {
 
     }
 
-    private fun fetchForecastContainer(activity: Activity) {
-        activity.let {
-            val isCelsius = SharedPrefs.getIsCelsiusFromSettings(it)
-            val days = SharedPrefs.getNumberOfDays(it)
-            val langCode = SharedPrefs.getLangCode(it)
+    private fun fetchForecastContainer() {
+            val isCelsius = SharedPrefs.getIsCelsiusFromSettings()
+            val days = SharedPrefs.getNumberOfDays()
+            val langCode = SharedPrefs.getLangCode()
             val units = if (isCelsius) METRIC_QUERY_PARAM_VALUE else IMPERIAL_QUERY_PARAM_VALUE
             val getDataService = RetrofitClient.retrofit?.create(GetDataService::class.java)
             val callForecast =
@@ -73,6 +71,6 @@ class ForecastContainerRepository(private val dao: ForecastContainerDao) {
                     Log.d("MyApp", "I am onFailureCall")
                 }
             })
-        }
+
     }
 }

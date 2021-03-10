@@ -1,12 +1,12 @@
 package ustun.muharrem.weatherforecast.utilities
 
-import android.content.Context
 import android.text.format.DateFormat
+import ustun.muharrem.weatherforecast.utilities.SharedPrefs.application
 import java.text.SimpleDateFormat
 import java.util.*
 
 object DateUtil {
-    // TODO try to get the names of the days in LOCAL Language
+
     fun getDateText(valid_date: String, position: Int): String {
         val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(valid_date)
         return when (position) {
@@ -16,8 +16,8 @@ object DateUtil {
         }
     }
 
-    fun getTimeText(context: Context, epochTime: Long): String {
-        val is24HourFormat = DateFormat.is24HourFormat(context)
+    fun getTimeText(epochTime: Long): String {
+        val is24HourFormat = DateFormat.is24HourFormat(application)
         val formatPattern = if (is24HourFormat) "H:mm" else "h:mm a"
         val time = Date(epochTime * 1000)
         return SimpleDateFormat(formatPattern, Locale.getDefault()).format(time)
