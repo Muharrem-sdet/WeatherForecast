@@ -2,7 +2,9 @@ package ustun.muharrem.weatherforecast.screens
 
 import android.app.Application
 import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ustun.muharrem.weatherforecast.data.ForecastContainer
 import ustun.muharrem.weatherforecast.database.ForecastDatabase
 import ustun.muharrem.weatherforecast.repository.ForecastContainerRepository
@@ -16,7 +18,9 @@ class ForecastViewModel(private val forecastContainerRepository: ForecastContain
         get() = _forecastListLiveData
 
     fun getForecastContainer() {
-        forecastContainerRepository.getForecastContainer()
+        viewModelScope.launch {
+            if (timePassed() or isCelsiusChanged()) forecastContainerRepository.getForecastContainer()
+        }
     }
 
     fun initializeAppLangCode() {
@@ -26,6 +30,22 @@ class ForecastViewModel(private val forecastContainerRepository: ForecastContain
                 else -> "en"
             }
         }
+    }
+
+    private suspend fun timePassed(): Boolean {
+        var forecastEpochBefore: Long
+        withContext(Dispatchers.IO) {
+            forecastEpochBefore = forecastContainerRepository.dao.getForecastEpoch()
+        }
+        return System.currentTimeMillis() - forecastEpochBefore > THREE_HOUR_EPOCH_TIME
+    }
+
+    private suspend fun isCelsiusChanged(): Boolean {
+        var isCelsiusBefore: Boolean
+        withContext(Dispatchers.IO) {
+            isCelsiusBefore = forecastContainerRepository.dao.getIsCelsiusFromDB()
+        }
+        return SharedPrefs.isCelsius != isCelsiusBefore
     }
 }
 

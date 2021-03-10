@@ -18,9 +18,15 @@ interface ForecastContainerDao {
     @Query("DELETE FROM forecastContainers")
     fun deleteAll()
 
-//    @Query("SELECT  forecastEpoch from forecastContainers")
-//    fun getForecastEpoch() : Long
-//
-//    @Query("UPDATE forecastContainers SET forecastEpoch = :currentEpoch")
-//    fun updateCurrentForecastEpoch(currentEpoch: Long)
+    @Query("SELECT  forecastEpoch from forecastContainers")
+    fun getForecastEpoch() : Long
+
+    @Query("UPDATE forecastContainers SET forecastEpoch = :currentEpoch")
+    fun updateForecastEpoch(currentEpoch: Long)
+
+    @Query("SELECT  isCelsius from forecastContainers")
+    fun getIsCelsiusFromDB() : Boolean
+
+    @Query("UPDATE forecastContainers SET isCelsius = :currentValue")
+    fun updateIsCelsius(currentValue: Boolean)
 }

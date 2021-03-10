@@ -10,7 +10,6 @@ interface GetDataService {
     @GET("daily")
     fun getForecast(
         @Query("lang") lang: String,
-//        @Query("days") days: String,
         @Query("units") units: String,
 //        @Query("lat") lat: String,
 //        @Query("lon") lon: String,

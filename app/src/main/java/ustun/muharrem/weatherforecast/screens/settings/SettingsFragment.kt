@@ -20,15 +20,6 @@ import ustun.muharrem.weatherforecast.utilities.SharedPrefs
 
 class SettingsFragment : Fragment() {
 
-    private lateinit var forecastViewModel: ForecastViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val factory = ForecastViewModelFactory(requireActivity().application)
-        forecastViewModel =
-            ViewModelProvider(requireActivity(), factory).get(ForecastViewModel::class.java)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,7 +29,6 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initViews()
     }
 
@@ -57,13 +47,11 @@ class SettingsFragment : Fragment() {
             SharedPrefs.isCelsius = true
             setDegreeViews()
             setUnitSubtitle()
-            forecastViewModel.getForecastContainer()
         }
         fahrenheit_degree_text_view.setOnClickListener {
             SharedPrefs.isCelsius = false
             setDegreeViews()
             setUnitSubtitle()
-            forecastViewModel.getForecastContainer()
         }
 
         days_settings_spinner.onItemSelectedListener = object :
@@ -89,7 +77,6 @@ class SettingsFragment : Fragment() {
             Toast.makeText(requireActivity(), toastMessage, Toast.LENGTH_SHORT).show()
             //  TODO other checkbox listeners actions to send notifications!!!
         }
-
     }
 
     private fun setNotificationsCheckbox() {

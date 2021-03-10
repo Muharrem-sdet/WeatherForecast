@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import kotlinx.android.parcel.Parcelize
+import ustun.muharrem.weatherforecast.utilities.SharedPrefs
 
 @Parcelize
 @Entity(tableName = "forecastContainers")
@@ -14,6 +15,8 @@ data class ForecastContainer(
     val id: Int = 0,
     @Expose(serialize = false, deserialize = false)
     val forecastEpoch: Long = 0,
+    @Expose(serialize = false, deserialize = false)
+    val isCelsius: Boolean = SharedPrefs.isCelsius,
     val data: List<Forecast>,
     val city_name: String,
     val lon: Double,

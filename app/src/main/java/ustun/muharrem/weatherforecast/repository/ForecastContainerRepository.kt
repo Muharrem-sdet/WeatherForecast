@@ -1,6 +1,5 @@
 package ustun.muharrem.weatherforecast.repository
 
-import android.app.Activity
 import android.util.Log
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.Dispatchers
@@ -13,35 +12,39 @@ import ustun.muharrem.weatherforecast.database.ForecastContainerDao
 import ustun.muharrem.weatherforecast.network.GetDataService
 import ustun.muharrem.weatherforecast.utilities.*
 
-class ForecastContainerRepository(private val dao: ForecastContainerDao) {
+class ForecastContainerRepository(val dao: ForecastContainerDao) {
 
     val forecastListLiveData: LiveData<ForecastContainer> = dao.getForecastContainer()
 
-    fun getForecastContainer() {
-//        withContext(Dispatchers.IO) {
-//            val forecastEpochNow = System.currentTimeMillis()
-//            val forecastEpochBefore = dao.getForecastEpoch()
-//            val timePassed = forecastEpochNow - forecastEpochBefore > THREE_HOUR_EPOCH_TIME
-//            if(timePassed)
-        fetchForecastContainer()
-//        }
-//        }
+    suspend fun getForecastContainer() {
+        withContext(Dispatchers.IO) {
+//            if (timePassed() or isCelsiusChanged())
+                fetchForecastContainer()
+        }
     }
 
+//    private suspend fun timePassed(): Boolean {
+//        var forecastEpochBefore: Long
+//        withContext(Dispatchers.IO) {
+//            forecastEpochBefore = dao.getForecastEpoch()
+//        }
+//        return System.currentTimeMillis() - forecastEpochBefore > THREE_HOUR_EPOCH_TIME
+//    }
+//
+//    private suspend fun isCelsiusChanged(): Boolean{
+//        var isCelsiusBefore: Boolean
+//        withContext(Dispatchers.IO){
+//            isCelsiusBefore = dao.getIsCelsiusFromDB()
+//        }
+//        return SharedPrefs.isCelsius != isCelsiusBefore
+//    }
+
     private fun insertToDatabase(forecastContainer: ForecastContainer) {
-        Log.d("MyApp", "I am in the fun of insert it to database")
-
         Thread {
-            Log.d("MyApp", "I am about to insert it to database")
-
             dao.insert(forecastContainer)
-/*           val currentEpoch = System.currentTimeMillis()
-//            dao.updateCurrentForecastEpoch(currentEpoch)
-*/
+            dao.updateForecastEpoch(System.currentTimeMillis())
+            dao.updateIsCelsius(SharedPrefs.isCelsius)
         }.start()
-        Log.d("MyApp", "I am at the end of the fun of insert it to database")
-
-
     }
 
     private fun fetchForecastContainer() {

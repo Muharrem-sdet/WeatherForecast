@@ -17,7 +17,6 @@ abstract class ForecastDatabase : RoomDatabase() {
     companion object {
         @Volatile
         private var INSTANCE: ForecastDatabase? = null
-
         fun getDatabase(application: Application): ForecastDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(

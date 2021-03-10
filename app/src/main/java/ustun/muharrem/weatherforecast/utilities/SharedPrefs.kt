@@ -25,16 +25,4 @@ object SharedPrefs {
     var langCode: String?
         get() = sharedPref.getString(LANG_CODE_SETTINGS_KEY, null)
         set(value) = sharedPref.edit().putString(LANG_CODE_SETTINGS_KEY, value).apply()
-
-
-//    fun getEpochTimeOfLastFetch(activity: Activity): Long {
-//        return getSharedPref(activity).getLong(EPOCH_TIME_KEY, 0)
-//    }
-//
-//    fun setEpochTimeOfLastFetch(activity: Activity, epochTime: Long) {
-//        val editor = getSharedPref(activity).edit()
-//        editor.putLong(EPOCH_TIME_KEY, epochTime)
-//        editor.apply()
-//    }
-
 }
