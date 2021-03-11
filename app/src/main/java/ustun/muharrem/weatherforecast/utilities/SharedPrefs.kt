@@ -4,9 +4,31 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 
+//class SharedPrefs {
 object SharedPrefs {
 
+/*    companion object {
+        var application = Application()
+
+        @Volatile
+        private var INSTANCE: SharedPreferences? = null
+        fun getInstance(): SharedPreferences {
+            synchronized(this) {
+                var instance = INSTANCE
+                if (instance == null) {
+                    instance = application.getSharedPreferences(
+                        SHARED_PREFERENCES_NAME,
+                        Context.MODE_PRIVATE
+                    )
+                    INSTANCE = instance
+                }
+                return instance!!
+            }
+        }
+    }*/
+
     var application = Application()
+
     private val sharedPref: SharedPreferences
         get() = application.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 

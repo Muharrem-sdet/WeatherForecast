@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_forecast.*
 import ustun.muharrem.weatherforecast.R
 import ustun.muharrem.weatherforecast.screens.ForecastViewModel
@@ -24,7 +25,6 @@ class ForecastFragment : Fragment() {
         forecastViewModel =
             ViewModelProvider(requireActivity(), factory).get(ForecastViewModel::class.java)
         forecastViewModel.initializeAppLangCode()
-
     }
 
     override fun onCreateView(
@@ -38,10 +38,14 @@ class ForecastFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        swipe_to_refresh.setOnRefreshListener {
+            forecastViewModel.getForecastContainer()
+            swipe_to_refresh.isRefreshing = false
+        }
         super.onViewCreated(view, savedInstanceState)
         forecastViewModel.forecastListLiveData.observe(viewLifecycleOwner, Observer {
             recycler_view_forecast_fragment.layoutManager = LinearLayoutManager(context)
-            it?.let{
+            it?.let {
                 recycler_view_forecast_fragment.adapter = ForecastListAdapter(it) { position ->
                     val direction =
                         ForecastFragmentDirections.actionForecastFragmentToForecastDetailsFragment(
