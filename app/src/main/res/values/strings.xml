@@ -29,6 +29,9 @@
     <string name="visibility_label">Visibility</string>
     <string name="max_uv_index_label">UV Index</string>
     <string name="details_fragment_label">Day Info</string>
+    <string name="today_notification_channel_name">Today \'s Weather</string>
+    <string name="today_notification_title">This is notification title</string>
+    <string name="today_notification_channel_desc">Today\'s notification channel description</string>
 
     <string-array name="number_of_days">
         <item>7</item>

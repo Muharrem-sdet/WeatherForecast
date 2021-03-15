@@ -13,6 +13,7 @@ import ustun.muharrem.weatherforecast.R
 import ustun.muharrem.weatherforecast.screens.ForecastViewModel
 import ustun.muharrem.weatherforecast.screens.ForecastViewModelFactory
 import ustun.muharrem.weatherforecast.screens.adapters.ForecastListAdapter
+import ustun.muharrem.weatherforecast.utilities.NotificationUtil
 import ustun.muharrem.weatherforecast.utilities.SharedPrefs
 
 class ForecastFragment : Fragment() {
@@ -52,6 +53,9 @@ class ForecastFragment : Fragment() {
                             position
                         )
                     findNavController().navigate(direction)
+                }
+                it.data.firstOrNull()?.let{forecast ->
+                    NotificationUtil.fireTodayNotification(requireContext(), forecast)
                 }
             }
         })
