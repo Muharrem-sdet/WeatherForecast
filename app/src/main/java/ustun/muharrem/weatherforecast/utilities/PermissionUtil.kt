@@ -10,17 +10,10 @@ import androidx.core.content.ContextCompat
 
 object PermissionUtil {
 
-    fun permissionGranted(context: Context): Boolean {
+    fun isLocationPermissionGranted(context: Context): Boolean {
         return ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    fun showPermissionDialog(activity: AppCompatActivity) {
-
-        // TODO Add show rationale in the future
-        //  if(shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION)){}
-
     }
 }

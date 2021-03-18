@@ -1,5 +1,6 @@
 package ustun.muharrem.weatherforecast.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -10,7 +11,8 @@ import ustun.muharrem.weatherforecast.data.ForecastContainer
 @Dao
 interface ForecastContainerDao {
     @Query("SELECT * FROM forecastContainers")
-    fun getForecastContainer(): Flow<ForecastContainer>
+    fun getForecastContainer(): ForecastContainer
+    // ForecastContainer? is nullable for the very first time call when app newly installed.
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(forecastContainer: ForecastContainer)

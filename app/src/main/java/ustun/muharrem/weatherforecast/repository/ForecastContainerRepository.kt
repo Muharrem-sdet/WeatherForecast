@@ -16,17 +16,22 @@ import ustun.muharrem.weatherforecast.data.ForecastContainerResult
 import ustun.muharrem.weatherforecast.database.ForecastContainerDao
 import ustun.muharrem.weatherforecast.network.GetDataService
 import ustun.muharrem.weatherforecast.utilities.*
+import java.lang.Error
+import java.lang.Exception
 
-class ForecastContainerRepository(val dao: ForecastContainerDao) {
+class ForecastContainerRepository(private val dao: ForecastContainerDao) {
 
-    val forecastListLiveData: LiveData<ForecastContainer> = dao.getForecastContainer().asLiveData()
-//        .map {
-//            ForecastContainerResult.Success(it)
-//        }
+    val forecastContainerResultLiveData = MutableLiveData<ForecastContainerResult>()
 
-    suspend fun getForecastContainer() {
+    suspend fun getPreviouslySavedForecastContainer() {
         withContext(Dispatchers.IO) {
-            fetchForecastContainer()
+            //What happens if the app runs for the very first time???
+            val forecastContainer = dao.getForecastContainer()
+//            forecastContainer?.let{
+            forecastContainerResultLiveData.postValue(
+                ForecastContainerResult.Success(forecastContainer)
+            )
+//            }
         }
     }
 
@@ -47,39 +52,33 @@ class ForecastContainerRepository(val dao: ForecastContainerDao) {
     }
 
     private fun insertToDatabase(forecastContainer: ForecastContainer) {
-        Thread {
-            dao.insert(forecastContainer)
-            dao.updateForecastEpoch(System.currentTimeMillis())
-            dao.updateIsCelsius(SharedPrefs.isCelsius)
-        }.start()
+        dao.insert(forecastContainer)
+        dao.updateForecastEpoch(System.currentTimeMillis())
+        dao.updateIsCelsius(SharedPrefs.isCelsius)
     }
 
-    private fun fetchForecastContainer() {
-        val langCode = SharedPrefs.langCode
-        val units =
-            if (SharedPrefs.isCelsius) METRIC_QUERY_PARAM_VALUE else IMPERIAL_QUERY_PARAM_VALUE
-        val getDataService = RetrofitClient.retrofit?.create(GetDataService::class.java)
-        val callForecast =
-            getDataService?.getForecast(langCode!!, units, 43026, API_KEY)
+    suspend fun fetchForecastContainer() {
+        withContext(Dispatchers.IO) {
+            val getDataService = RetrofitClient.retrofit?.create(GetDataService::class.java)
+            val langCode = SharedPrefs.langCode
+            val units =
+                if (SharedPrefs.isCelsius) METRIC_QUERY_PARAM_VALUE else IMPERIAL_QUERY_PARAM_VALUE
+            val callForecast =
+                getDataService?.getForecast(langCode!!, units, 43026, API_KEY)
 
-        callForecast?.enqueue(object : Callback<ForecastContainer> {
-            override fun onResponse(
-                call: Call<ForecastContainer>,
-                response: Response<ForecastContainer>
-            ) {
-                val forecastContainer: ForecastContainer? = response.body()
+            try {
+                val response = callForecast?.execute()
+                val forecastContainer = response?.body()
                 forecastContainer?.let {
-                    Log.d("MyApp", "ForecastContainer is NOT null")
+                    forecastContainerResultLiveData.postValue(ForecastContainerResult.Success(it))
                     insertToDatabase(it)
                 }
-            }
+                // TODO: Handle if forecastContainer is null
+            } catch (ex: Exception) {
+                ex.localizedMessage?.let { Log.d("MyApp", it) }
+                ForecastContainerResult.Failure(Error(ex.message))
 
-            override fun onFailure(call: Call<ForecastContainer>, t: Throwable) {
-                // TODO add some error messages for the user
-                t.localizedMessage?.let { Log.d("MyApp", it) }
-                Log.d("MyApp", "I am onFailureCall")
             }
-        })
-
+        }
     }
 }

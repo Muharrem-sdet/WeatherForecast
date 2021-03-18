@@ -2,10 +2,7 @@ package ustun.muharrem.weatherforecast.screens
 
 import android.app.Application
 import androidx.lifecycle.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import ustun.muharrem.weatherforecast.data.ForecastContainer
 import ustun.muharrem.weatherforecast.data.ForecastContainerResult
 import ustun.muharrem.weatherforecast.database.ForecastDatabase
 import ustun.muharrem.weatherforecast.repository.ForecastContainerRepository
@@ -14,15 +11,22 @@ import java.util.*
 
 class ForecastViewModel(private val forecastContainerRepository: ForecastContainerRepository) :
     ViewModel() {
-    private val _forecastListLiveData = forecastContainerRepository.forecastListLiveData
-    val forecastListLiveData: LiveData<ForecastContainer>
-        get() = _forecastListLiveData
+    private val _forecastContainerResultLiveData =
+        forecastContainerRepository.forecastContainerResultLiveData
+    val forecastContainerResultLiveData: LiveData<ForecastContainerResult>
+        get() = _forecastContainerResultLiveData
 
     fun getForecastContainer() {
-//        _forecastListLiveData.value = ForecastContainerResult.isLoading
+        _forecastContainerResultLiveData.postValue(ForecastContainerResult.IsLoading)
         viewModelScope.launch {
             if (forecastContainerRepository.timePassed() or forecastContainerRepository.isCelsiusChanged())
-                forecastContainerRepository.getForecastContainer()
+                forecastContainerRepository.fetchForecastContainer()
+        }
+    }
+
+    fun getPreviouslySavedForecastContainer() {
+        viewModelScope.launch {
+            forecastContainerRepository.getPreviouslySavedForecastContainer()
         }
     }
 

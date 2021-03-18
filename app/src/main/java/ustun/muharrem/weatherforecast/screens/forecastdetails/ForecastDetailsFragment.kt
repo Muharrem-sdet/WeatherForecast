@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.fragment_forecast_details.*
 import kotlinx.android.synthetic.main.layout_forecast_details_item.view.*
 import ustun.muharrem.weatherforecast.R
 import ustun.muharrem.weatherforecast.data.Forecast
+import ustun.muharrem.weatherforecast.data.ForecastContainerResult
 import ustun.muharrem.weatherforecast.screens.ForecastViewModel
 import ustun.muharrem.weatherforecast.screens.ForecastViewModelFactory
 import ustun.muharrem.weatherforecast.utilities.DateUtil
@@ -28,13 +29,13 @@ class ForecastDetailsFragment : Fragment() {
         val factory = ForecastViewModelFactory(requireActivity().application)
         forecastViewModel =
             ViewModelProvider(requireActivity(), factory).get(ForecastViewModel::class.java)
+        forecastViewModel.getPreviouslySavedForecastContainer()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
-        forecastViewModel.getForecastContainer()
         return inflater.inflate(R.layout.fragment_forecast_details, container, false)
     }
 
@@ -42,10 +43,22 @@ class ForecastDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setDetailsItemLabels()
 
-        forecastViewModel.forecastListLiveData.observe(viewLifecycleOwner, Observer {
-            city_name.text = it.city_name
-            setDetailsHeaderValues(it.data[args.position])
-            setDetailsItemValues(it.data[args.position])
+        forecastViewModel.forecastContainerResultLiveData.observe(viewLifecycleOwner, Observer {
+            it?.let { forecastContainerResult ->
+                when (forecastContainerResult) {
+                    is ForecastContainerResult.Failure -> {
+                        TODO()
+                    }
+                    ForecastContainerResult.IsLoading -> {
+                        TODO()
+                    }
+                    is ForecastContainerResult.Success -> {
+                        city_name.text = forecastContainerResult.forecastContainer.city_name
+                        setDetailsHeaderValues(forecastContainerResult.forecastContainer.data[args.position])
+                        setDetailsItemValues(forecastContainerResult.forecastContainer.data[args.position])
+                    }
+                }
+            }
         })
     }
 
@@ -58,27 +71,27 @@ class ForecastDetailsFragment : Fragment() {
     }
 
     private fun setDetailsItemValues(forecast: Forecast) {
-            sunrise_time_details_item.forecast_details_value.text =
-                DateUtil.getTimeText(forecast.sunrise_ts)
-            sunset_time_details_item.forecast_details_value.text =
-                DateUtil.getTimeText(forecast.sunset_ts)
-            val windSpeedUnit = if (SharedPrefs.isCelsius) " m/s" else " mph"
-            wind_speed_details_item.forecast_details_value.text =
-                forecast.wind_spd.toString().plus(windSpeedUnit)
-            wind_direction_details_item.forecast_details_value.text =
-                forecast.wind_cdir_full.capitalize(Locale.ROOT)
-            humidity_details_item.forecast_details_value.text = forecast.rh.toString().plus("%")
-            precipitation_probability_details_item.forecast_details_value.text =
-                forecast.pop.toString().plus("%")
-            val precipUnit = if (SharedPrefs.isCelsius) " mm" else " in"
-            liquid_precipitation_details_item.forecast_details_value.text =
-                forecast.precip.toString().plus(precipUnit)
-            pressure_details_item.forecast_details_value.text =
-                forecast.pres.toString().plus(" mbar")
-            val visLength = if (SharedPrefs.isCelsius) " km" else " mi"
-            visibility_details_item.forecast_details_value.text =
-                forecast.vis.toString().plus(visLength)
-            max_uv_index_details_item.forecast_details_value.text = forecast.uv.toString()
+        sunrise_time_details_item.forecast_details_value.text =
+            DateUtil.getTimeText(forecast.sunrise_ts)
+        sunset_time_details_item.forecast_details_value.text =
+            DateUtil.getTimeText(forecast.sunset_ts)
+        val windSpeedUnit = if (SharedPrefs.isCelsius) " m/s" else " mph"
+        wind_speed_details_item.forecast_details_value.text =
+            forecast.wind_spd.toString().plus(windSpeedUnit)
+        wind_direction_details_item.forecast_details_value.text =
+            forecast.wind_cdir_full.capitalize(Locale.ROOT)
+        humidity_details_item.forecast_details_value.text = forecast.rh.toString().plus("%")
+        precipitation_probability_details_item.forecast_details_value.text =
+            forecast.pop.toString().plus("%")
+        val precipUnit = if (SharedPrefs.isCelsius) " mm" else " in"
+        liquid_precipitation_details_item.forecast_details_value.text =
+            forecast.precip.toString().plus(precipUnit)
+        pressure_details_item.forecast_details_value.text =
+            forecast.pres.toString().plus(" mbar")
+        val visLength = if (SharedPrefs.isCelsius) " km" else " mi"
+        visibility_details_item.forecast_details_value.text =
+            forecast.vis.toString().plus(visLength)
+        max_uv_index_details_item.forecast_details_value.text = forecast.uv.toString()
     }
 
     private fun setDetailsItemLabels() {
