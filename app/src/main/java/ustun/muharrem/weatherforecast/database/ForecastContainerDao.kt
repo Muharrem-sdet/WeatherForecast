@@ -11,7 +11,7 @@ import ustun.muharrem.weatherforecast.data.ForecastContainer
 @Dao
 interface ForecastContainerDao {
     @Query("SELECT * FROM forecastContainers")
-    fun getForecastContainer(): ForecastContainer
+    fun getForecastContainer(): ForecastContainer?
     // ForecastContainer? is nullable for the very first time call when app newly installed.
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -20,15 +20,15 @@ interface ForecastContainerDao {
 //    @Query("DELETE FROM forecastContainers")
 //    fun deleteAll()
 
-    @Query("SELECT  forecastEpoch from forecastContainers")
-    fun getForecastEpoch() : Long
-
+//    @Query("SELECT  forecastEpoch from forecastContainers")
+//    fun getForecastEpoch() : Long
+//
     @Query("UPDATE forecastContainers SET forecastEpoch = :currentEpoch")
     fun updateForecastEpoch(currentEpoch: Long)
-
-    @Query("SELECT  isCelsius from forecastContainers")
-    fun getIsCelsiusFromDB() : Boolean
-
-    @Query("UPDATE forecastContainers SET isCelsius = :currentValue")
-    fun updateIsCelsius(currentValue: Boolean)
+//
+//    @Query("SELECT  isCelsius from forecastContainers")
+//    fun getIsCelsiusFromDB() : Boolean
+//
+//    @Query("UPDATE forecastContainers SET isCelsius = :currentValue")
+//    fun updateIsCelsius(currentValue: Boolean)
 }

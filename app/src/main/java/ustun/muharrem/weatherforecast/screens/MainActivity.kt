@@ -7,6 +7,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
 import ustun.muharrem.weatherforecast.R
+import ustun.muharrem.weatherforecast.utilities.IS_CELSIUS_SETTING_KEY
+import ustun.muharrem.weatherforecast.utilities.SharedPrefs
 
 class MainActivity : AppCompatActivity() {
 

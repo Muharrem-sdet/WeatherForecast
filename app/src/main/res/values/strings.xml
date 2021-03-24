@@ -32,6 +32,9 @@
     <string name="today_notification_channel_name">Today \'s Weather</string>
     <string name="today_notification_title">This is notification title</string>
     <string name="today_notification_channel_desc">Today\'s notification channel description</string>
+    <string name="label_location_permission_textview">Weather Forecast for your area can not be displayed since the location permission is not granted. \n\nPlease go to device settings to allow access to your location and restart Weather Forecast.</string>
+    <string name="label_button_loc_perm_grants">Yes, Please</string>
+    <string name="label_button_loc_perm_denies">Not now</string>
 
     <string-array name="number_of_days">
         <item>7</item>

@@ -1,4 +1,4 @@
-package ustun.muharrem.weatherforecast.utilities
+package ustun.muharrem.weatherforecast.network
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

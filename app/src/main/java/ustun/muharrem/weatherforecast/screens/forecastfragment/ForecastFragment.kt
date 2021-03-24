@@ -1,6 +1,7 @@
 package ustun.muharrem.weatherforecast.screens.forecastfragment
 
 import android.Manifest
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
 import androidx.activity.result.contract.ActivityResultContracts
@@ -10,25 +11,35 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_forecast.*
+import kotlinx.android.synthetic.main.layout_location_permission.*
 import ustun.muharrem.weatherforecast.R
 import ustun.muharrem.weatherforecast.data.ForecastContainer
 import ustun.muharrem.weatherforecast.data.ForecastContainerResult
 import ustun.muharrem.weatherforecast.screens.ForecastViewModel
 import ustun.muharrem.weatherforecast.screens.ForecastViewModelFactory
 import ustun.muharrem.weatherforecast.screens.adapters.ForecastListAdapter
+import ustun.muharrem.weatherforecast.utilities.IS_CELSIUS_SETTING_KEY
 import ustun.muharrem.weatherforecast.utilities.NotificationUtil
 import ustun.muharrem.weatherforecast.utilities.PermissionUtil
+import ustun.muharrem.weatherforecast.utilities.SharedPrefs
 
 class ForecastFragment : Fragment() {
 
     private lateinit var forecastViewModel: ForecastViewModel
+    private val sharedPrefListener =
+        SharedPreferences.OnSharedPreferenceChangeListener { sharedPref, key ->
+            when (key) {
+                IS_CELSIUS_SETTING_KEY -> forecastViewModel.fetchForecastContainer()
+            }
+        }
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
             getLocationDetails()
+            location_permission_layout.visibility = View.GONE
         } else {
-            // TODO
+            location_permission_layout.visibility = View.VISIBLE
         }
     }
 
@@ -38,7 +49,7 @@ class ForecastFragment : Fragment() {
         forecastViewModel =
             ViewModelProvider(requireActivity(), factory).get(ForecastViewModel::class.java)
         forecastViewModel.initializeAppLangCode()
-        forecastViewModel.getPreviouslySavedForecastContainer()
+        SharedPrefs.sharedPref.registerOnSharedPreferenceChangeListener(sharedPrefListener)
     }
 
     override fun onCreateView(
@@ -56,15 +67,24 @@ class ForecastFragment : Fragment() {
             askForLocationPermission()
             swipe_to_refresh.isRefreshing = false
         }
+
+//        button_grants_location_permission.setOnClickListener {
+//            location_permission_layout.visibility = View.GONE
+//            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+//        }
+//        button_denies_location_permission.setOnClickListener{
+//            // TODO: button_denies_location_permission click listener actions
+//        }
+
         forecastViewModel.forecastContainerResultLiveData.observe(viewLifecycleOwner, Observer {
             it?.let { forecastContainerResult ->
                 when (forecastContainerResult) {
                     is ForecastContainerResult.Success -> {
                         createRecyclerView(forecastContainerResult.forecastContainer)
-                        forecastContainerResult.forecastContainer.data.firstOrNull()
-                            ?.let { forecast ->
-                                NotificationUtil.fireTodayNotification(requireContext(), forecast)
-                            }
+//                        forecastContainerResult.forecastContainer.data.firstOrNull()
+//                            ?.let { forecast ->
+//                                NotificationUtil.fireTodayNotification(requireContext(), forecast)
+//                            }
                     }
                     ForecastContainerResult.IsLoading -> {
                         //TODO Show loading animation
@@ -91,26 +111,17 @@ class ForecastFragment : Fragment() {
             }
     }
 
-    private fun getLocationDetails() {
-        // TODO Get Location details from GPS
-        forecastViewModel.getForecastContainer()
-    }
-
     private fun askForLocationPermission() {
         when {
             PermissionUtil.isLocationPermissionGranted(requireContext()) -> getLocationDetails()
-            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) -> {
-                // TODO Show educational dialog to user
-                // Show a dialog - Have two buttons:
-                // No, thanks - show error snackBar
-                // Yes - Call this method again
-
-                // Temporary let us keep it here
-//                askForLocationPermission()
-                getLocationDetails()
-            }
+//            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) -> { }
             else -> requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
+    }
+
+    private fun getLocationDetails() {
+        // TODO Get Location details from GPS
+        forecastViewModel.getForecastContainer()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

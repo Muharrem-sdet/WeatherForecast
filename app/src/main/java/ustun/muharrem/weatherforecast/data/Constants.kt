@@ -12,7 +12,7 @@ const val IS_CELSIUS_SETTING_KEY = "is metric setting key"
 const val NUMBER_OF_DAYS_SETTING_KEY = "number of days setting key"
 const val IS_NOTIFICATIONS_ENABLED = "is notifications enabled"
 const val LANG_CODE_SETTINGS_KEY = "language settings key"
-const val EPOCH_TIME_KEY = "epoch time key"
+const val LAST_EPOCH_TIME_KEY = "last epoch time key"
 
 //Room Database related
 const val FORECAST_ROOM_DATABASE_NAME = "forecast database"

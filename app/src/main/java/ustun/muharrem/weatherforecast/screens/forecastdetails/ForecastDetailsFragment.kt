@@ -29,7 +29,7 @@ class ForecastDetailsFragment : Fragment() {
         val factory = ForecastViewModelFactory(requireActivity().application)
         forecastViewModel =
             ViewModelProvider(requireActivity(), factory).get(ForecastViewModel::class.java)
-        forecastViewModel.getPreviouslySavedForecastContainer()
+        forecastViewModel.getForecastContainer()
     }
 
     override fun onCreateView(
@@ -47,10 +47,10 @@ class ForecastDetailsFragment : Fragment() {
             it?.let { forecastContainerResult ->
                 when (forecastContainerResult) {
                     is ForecastContainerResult.Failure -> {
-                        TODO()
+                        // TODO: Show error message
                     }
                     ForecastContainerResult.IsLoading -> {
-                        TODO()
+                        // TODO: Show spinner
                     }
                     is ForecastContainerResult.Success -> {
                         city_name.text = forecastContainerResult.forecastContainer.city_name

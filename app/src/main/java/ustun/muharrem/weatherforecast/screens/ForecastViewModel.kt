@@ -17,18 +17,24 @@ class ForecastViewModel(private val forecastContainerRepository: ForecastContain
         get() = _forecastContainerResultLiveData
 
     fun getForecastContainer() {
-        _forecastContainerResultLiveData.postValue(ForecastContainerResult.IsLoading)
+        _forecastContainerResultLiveData.value = ForecastContainerResult.IsLoading
         viewModelScope.launch {
-            if (forecastContainerRepository.timePassed() or forecastContainerRepository.isCelsiusChanged())
-                forecastContainerRepository.fetchForecastContainer()
+                forecastContainerRepository.getForecastContainer()
         }
     }
 
-    fun getPreviouslySavedForecastContainer() {
+    fun fetchForecastContainer(){
+        _forecastContainerResultLiveData.value = ForecastContainerResult.IsLoading
         viewModelScope.launch {
-            forecastContainerRepository.getPreviouslySavedForecastContainer()
+            forecastContainerRepository.fetchForecastContainer()
         }
     }
+
+//    fun getPreviouslySavedForecastContainer() {
+//        viewModelScope.launch {
+//            forecastContainerRepository.getPreviouslySavedForecastContainer()
+//        }
+//    }
 
     fun initializeAppLangCode() {
         if (SharedPrefs.langCode == null) {
